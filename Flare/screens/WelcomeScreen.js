@@ -8,7 +8,7 @@ export default function WelcomeScreen(props) {
 
     return (
         <View style={styles.container}>
-            <ImageBackground source={require('../assets/images/onboarding-bg.png')} style={styles.container}></ImageBackground>
+            <ImageBackground source={require('../assets/images/onboarding-bg.png')} style={styles.container} />
             <StatusBar barStyle={"light-content"} />
             <View style={StyleSheet.absoluteFill}>
                 <Svg height="812" width="375">
@@ -31,7 +31,7 @@ export default function WelcomeScreen(props) {
             </Text>
             <TouchableOpacity 
                 style={styles.signUpRectangle} 
-                onPress={() => navigation.navigate('SignUpBirthday')}>
+                onPress={() => navigation.navigate('SignUpBirthdayScreen')}>
                 <Text style={styles.signUpText}>SIGN UP</Text>
             </TouchableOpacity>
             <View style={styles.line24}></View>

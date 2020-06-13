@@ -12,7 +12,7 @@ export default function LoginScreen(props) {
   return (
 	<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
 		<View style={styles.container}>
-			<ImageBackground source={require('../assets/images/onboarding-bg.png')} style={styles.container}></ImageBackground>
+			<ImageBackground source={require('../assets/images/onboarding-bg.png')} style={styles.container} />
 			<StatusBar barStyle={"light-content"} />
 			<View style={StyleSheet.absoluteFill}>
 				<Svg height="812" width="375">
@@ -91,8 +91,6 @@ export default function LoginScreen(props) {
 	</TouchableWithoutFeedback>
   );
 };
-
-//<View style={{ height: -60 }} />
 
 const styles = StyleSheet.create({
 

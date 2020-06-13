@@ -6,7 +6,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import LinkingConfiguration from '../navigation/LinkingConfiguration';
 
 import WelcomeScreen from './WelcomeScreen';
-//import SignUpBirthday from './SignUpBirthdayScreen';
+import SignUpBirthdayScreen from './SignUpBirthdayScreen';
 import LoginScreen from './LoginScreen';
 
 const Stack = createStackNavigator();
@@ -21,6 +21,7 @@ export default function AppNavigator() {
                     headerShown: false,
                 }}>
 					<Stack.Screen name='WelcomeScreen' component={WelcomeScreen} />
+					<Stack.Screen name='SignUpBirthdayScreen' component={SignUpBirthdayScreen} />
 					<Stack.Screen name='LoginScreen' component={LoginScreen} />
 				</Stack.Navigator>
 			</NavigationContainer>
