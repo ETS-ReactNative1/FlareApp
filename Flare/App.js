@@ -1,36 +1,33 @@
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import * as React from 'react';
-import { Platform, StatusBar, StyleSheet, View } from 'react-native';
+import React, { useState } from 'react';
+import { AppLoading } from 'expo';
+import * as Font from 'expo-font';
+import AppNavigator from './screens/AppNavigator';
+import Amplify from 'aws-amplify';
+import config from './aws-exports';
 
-import useCachedResources from './hooks/useCachedResources';
-import BottomTabNavigator from './navigation/BottomTabNavigator';
-import LinkingConfiguration from './navigation/LinkingConfiguration';
+Amplify.configure(config);
 
-const Stack = createStackNavigator();
+const fetchFonts = () => {
+	return Font.loadAsync({
+		'SpaceMono-Regular': require('./assets/fonts/SpaceMono-Regular.ttf'),
+    	'Poppins-Bold': require('./assets/fonts/Poppins-Bold.ttf'),
+    	'SFProText-Regular': require('./assets/fonts/SF-Pro-Text-Regular.otf'),
+  	});
+};
 
-export default function App(props) {
-  const isLoadingComplete = useCachedResources();
+export default function App() {
+  	const [dataLoaded, setDataLoaded] = useState(false);
 
-  if (!isLoadingComplete) {
-    return null;
-  } else {
-    return (
-      <View style={styles.container}>
-        {Platform.OS === 'ios' && <StatusBar barStyle="dark-content" />}
-        <NavigationContainer linking={LinkingConfiguration}>
-          <Stack.Navigator>
-            <Stack.Screen name="Root" component={BottomTabNavigator} />
-          </Stack.Navigator>
-        </NavigationContainer>
-      </View>
-    );
-  }
+  	if (!dataLoaded) {
+    	return (
+		<AppLoading
+			startAsync={fetchFonts}
+			onFinish={() => setDataLoaded(true)}
+		/>
+		);
+	}
+
+	return (
+		<AppNavigator />
+	);
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-});

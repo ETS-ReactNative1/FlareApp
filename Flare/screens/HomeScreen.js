@@ -3,8 +3,6 @@ import * as React from 'react';
 import { Image, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 
-import { MonoText } from '../components/StyledText';
-
 export default function HomeScreen() {
   return (
     <View style={styles.container}>
@@ -26,7 +24,7 @@ export default function HomeScreen() {
           <Text style={styles.getStartedText}>Open up the code for this screen:</Text>
 
           <View style={[styles.codeHighlightContainer, styles.homeScreenFilename]}>
-            <MonoText>screens/HomeScreen.js</MonoText>
+            <Text style={styles.getStartedText}>screens/HomeScreen.js</Text>
           </View>
 
           <Text style={styles.getStartedText}>
@@ -45,7 +43,7 @@ export default function HomeScreen() {
         <Text style={styles.tabBarInfoText}>This is a tab bar. You can edit it in:</Text>
 
         <View style={[styles.codeHighlightContainer, styles.navigationFilename]}>
-          <MonoText style={styles.codeHighlightText}>navigation/BottomTabNavigator.js</MonoText>
+          <Text style={styles.codeHighlightText}>navigation/BottomTabNavigator.js</Text>
         </View>
       </View>
     </View>
@@ -53,7 +51,7 @@ export default function HomeScreen() {
 }
 
 HomeScreen.navigationOptions = {
-  header: null,
+    header: null,
 };
 
 function DevelopmentModeNotice() {
@@ -136,6 +134,7 @@ const styles = StyleSheet.create({
     color: 'rgba(96,100,109, 1)',
     lineHeight: 24,
     textAlign: 'center',
+    fontFamily: 'SpaceMono-Regular',
   },
   tabBarInfoContainer: {
     position: 'absolute',
@@ -161,6 +160,7 @@ const styles = StyleSheet.create({
     fontSize: 17,
     color: 'rgba(96,100,109, 1)',
     textAlign: 'center',
+    fontFamily: 'SpaceMono-Regular',
   },
   navigationFilename: {
     marginTop: 5,
@@ -175,5 +175,6 @@ const styles = StyleSheet.create({
   helpLinkText: {
     fontSize: 14,
     color: '#2e78b7',
-  },
+    fontFamily: 'SpaceMono-Regular',
+  }
 });
