@@ -1,0 +1,34 @@
+type User @model {
+  id: ID!
+  username: String!
+  password: String!
+  phone: Int!
+  birthday: Int!
+  location: Float
+}
+
+type Post @model {
+  id: ID!
+  content: String!
+  shares: Int
+  reports: Int
+  user_id: ID!
+}
+
+type Comment @model {
+  id: ID!
+  content: String!
+  reports: Int
+  post_id: ID!
+  user_id: ID!
+}
+
+type PostLike @model {
+  post_id: ID!
+  user_id: ID!
+}
+
+type CommentLike @model {
+  comment_id: ID!
+  user_id: ID!
+}

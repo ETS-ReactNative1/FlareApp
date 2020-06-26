@@ -9,7 +9,6 @@ Amplify.configure(config);
 
 const fetchFonts = () => {
 	return Font.loadAsync({
-		'SpaceMono-Regular': require('./assets/fonts/SpaceMono-Regular.ttf'),
     	'Poppins-Bold': require('./assets/fonts/Poppins-Bold.ttf'),
     	'SFProText-Regular': require('./assets/fonts/SF-Pro-Text-Regular.otf'),
   	});
