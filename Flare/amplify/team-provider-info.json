@@ -10,6 +10,11 @@
             "StackName": "amplify-flare-dev-150944",
             "StackId": "arn:aws:cloudformation:us-east-2:533348061530:stack/amplify-flare-dev-150944/99a44b60-b7e0-11ea-92b7-0a7adbd72fc8",
             "AmplifyAppId": "dl451lzad42du"
+        },
+        "categories": {
+            "auth": {
+                "flare9217d9a3": {}
+            }
         }
     }
 }

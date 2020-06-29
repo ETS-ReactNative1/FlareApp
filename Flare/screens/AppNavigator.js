@@ -6,6 +6,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import LinkingConfiguration from '../navigation/LinkingConfiguration';
 
 // SCREENS
+import Splash from './SplashScreen';
 import WelcomeScreen from './WelcomeScreen';
 	// Sign Up Screens
 import SignUpBirthdayScreen from './SignUpBirthdayScreen';
@@ -24,27 +25,28 @@ const Stack = createStackNavigator();
 
 export default function AppNavigator() {
 	return (
-		<View style={styles.container}>
-		{Platform.OS === 'ios' && <StatusBar barStyle="dark-content" />}
-			<NavigationContainer linking={LinkingConfiguration}>
-				<Stack.Navigator
-				screenOptions={{
-                    headerShown: false,
-                }}>
-					<Stack.Screen name='WelcomeScreen' component={WelcomeScreen} />
+		<NavigationContainer linking={LinkingConfiguration}>
+			{Platform.OS === 'ios'}
+			<Stack.Navigator
+			screenOptions={{
+				headerShown: false,
+			}}
+			initialRouteName='Splash'
+			>
+				<Stack.Screen name='Splash' component={Splash} />
+				<Stack.Screen name='WelcomeScreen' component={WelcomeScreen} />
 
-					<Stack.Screen name='SignUpBirthdayScreen' component={SignUpBirthdayScreen} />
-					<Stack.Screen name='SignUpPhoneScreen' component={SignUpPhoneScreen} />
-					<Stack.Screen name='SignUpTFAScreen' component={SignUpTFAScreen} />
-					<Stack.Screen name='SignUpUsernameScreen' component={SignUpUsernameScreen} />
+				<Stack.Screen name='SignUpBirthdayScreen' component={SignUpBirthdayScreen} />
+				<Stack.Screen name='SignUpPhoneScreen' component={SignUpPhoneScreen} />
+				<Stack.Screen name='SignUpTFAScreen' component={SignUpTFAScreen} />
+				<Stack.Screen name='SignUpUsernameScreen' component={SignUpUsernameScreen} />
 
-					<Stack.Screen name='LoginScreen' component={LoginScreen} />
-					<Stack.Screen name='ForgotPasswordPhoneScreen' component={ForgotPasswordPhoneScreen} />
-					<Stack.Screen name='ForgotPasswordTFAScreen' component={ForgotPasswordTFAScreen} />
-					<Stack.Screen name='ForgotPasswordResetScreen' component={ForgotPasswordResetScreen} />
-				</Stack.Navigator>
-			</NavigationContainer>
-		</View>
+				<Stack.Screen name='LoginScreen' component={LoginScreen} />
+				<Stack.Screen name='ForgotPasswordPhoneScreen' component={ForgotPasswordPhoneScreen} />
+				<Stack.Screen name='ForgotPasswordTFAScreen' component={ForgotPasswordTFAScreen} />
+				<Stack.Screen name='ForgotPasswordResetScreen' component={ForgotPasswordResetScreen} />
+			</Stack.Navigator>
+		</NavigationContainer>
 	);
 }
 

@@ -1,12 +1,57 @@
 import React from 'react';
-import { StyleSheet, View, Text, ImageBackground, StatusBar, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, ImageBackground, StatusBar, TouchableOpacity, Modal } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import DatePicker from '@react-native-community/datetimepicker';
 
 export default function SignUpBirthdayScreen(props) {
     const { navigation } = props;
-    const onChange = (event, date) => {};
+    const current_date = new Date();
+    const sixteen_yo = new Date('17');
+    let { birthday, years_old, months_old, days_old } = 0;
+    const [modalVisible, setModalVisible] = React.useState(false);
+
+    const onChange = (event, date) => {
+        birthday = date;
+        years_old = current_date.getFullYear() - date.getFullYear();
+        months_old = date.getMonth() + 1;
+        days_old = date.getDate();
+    };
+
+    const handlePress = () => {
+        if (years_old < sixteen_yo.getFullYear() || birthday == undefined) {
+            setModalVisible(!modalVisible);
+            RenderError();
+        }
+        else if (years_old == sixteen_yo.getFullYear()) {
+            if (months_old > current_date.getMonth() + 1) {
+                setModalVisible(!modalVisible);
+                RenderError();
+            }
+            else if (months_old == current_date.getMonth() + 1 && days_old > current_date.getDate()) {
+                setModalVisible(!modalVisible);
+                RenderError();
+            }
+            else {
+                navigation.navigate('SignUpPhoneScreen');
+            }
+        }
+        else {
+            navigation.navigate('SignUpPhoneScreen');
+        }
+    };
+
+    function RenderError() {
+        return ( 
+            <Modal animationType='slide' transparent={true} presentationStyle='overFullScreen' visible={modalVisible}>
+                <TouchableOpacity style={styles.container} onPress={() => {setModalVisible(!modalVisible)}}>
+                    <TouchableOpacity style={styles.errorRectangle} onPress={() => {setModalVisible(!modalVisible)}}>
+                        <Text style={styles.errorText}>YOU MUST BE OVER THE{'\n'}AGE OF 16 TO USE FLARE.</Text>
+                    </TouchableOpacity>
+                </TouchableOpacity>
+            </Modal>
+        );
+    }
 
     return (
         <ImageBackground source={require('../assets/images/onboarding-bg.png')} style={styles.background}>
@@ -41,11 +86,13 @@ export default function SignUpBirthdayScreen(props) {
                     />
                 </View>
 
+                < RenderError />
+
                 <TouchableOpacity style={styles.cancelRectangle} onPress={() => navigation.navigate('WelcomeScreen')}>
                     <Text style={styles.cancelText}>CANCEL</Text>
                 </TouchableOpacity> 
 
-                <TouchableOpacity style={styles.continueButton} onPress={() => navigation.navigate('SignUpPhoneScreen')}>
+                <TouchableOpacity style={styles.continueButton} onPress={handlePress}>
                     <FontAwesome5 name={'arrow-circle-right'} size={60} color='#ef473a' solid />
                 </TouchableOpacity>
             </View>
@@ -141,5 +188,26 @@ const styles = StyleSheet.create({
         position: 'absolute',
         bottom: 29,
         right: 40,
+    },
+
+    errorRectangle: {
+        position: 'absolute',
+        bottom: 160,
+        alignSelf: 'center',
+        width: 335,
+        height: 100,
+        borderRadius: 50,
+        backgroundColor: '#ef473a',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+
+    errorText: {
+        color: '#30122D',
+        fontFamily: 'Poppins-Bold',
+        fontSize: 17,
+        fontWeight: '700',
+        letterSpacing: 1.2,
+        textAlign: 'center'
     },
 });

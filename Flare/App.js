@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { AppLoading } from 'expo';
 import * as Font from 'expo-font';
 import AppNavigator from './screens/AppNavigator';
@@ -15,18 +15,15 @@ const fetchFonts = () => {
 };
 
 export default function App() {
-  	const [dataLoaded, setDataLoaded] = useState(false);
+  	const [dataLoaded, setDataLoaded] = React.useState(false);
 
-  	if (!dataLoaded) {
-    	return (
-		<AppLoading
-			startAsync={fetchFonts}
-			onFinish={() => setDataLoaded(true)}
-		/>
+	if (!dataLoaded) {
+		return (
+			<AppLoading startAsync={fetchFonts} onFinish={() => setDataLoaded(true)} />
 		);
 	}
-
+  	
 	return (
-		<AppNavigator />
+			<AppNavigator />
 	);
-}
+	}
