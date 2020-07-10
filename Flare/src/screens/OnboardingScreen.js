@@ -9,8 +9,26 @@ import Onboarding from 'react-native-onboarding-swiper';
 */
 
 export default function OnboardingScreen(props) {
+    const { navigation } = props;
 
     return (
-        //TODO
+        <View style={styles.container}>
+            <Onboarding
+                pages={[
+                {
+                    backgroundColor: '#fff',
+                    image: <Image source={require('')} />,
+                    title: 'Onboarding',
+                    subtitle: 'Done with React Native Onboarding Swiper',
+                },
+                ]}
+            />
+        </View>
     );
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+    },
+});
