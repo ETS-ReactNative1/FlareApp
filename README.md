@@ -10,7 +10,7 @@ The AWS Serverless backend is built using Amplify, Cognito, a GraphQL API, Dynam
 
 Here's a few E&R diagrams visualizing the backend.
 
-![](tables.png)
+![](tables.jgp)
 > DynamoDB Tables
 
 ```
