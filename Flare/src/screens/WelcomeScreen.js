@@ -6,7 +6,7 @@ export default function WelcomeScreen(props) {
     const { navigation } = props;
 
     return (
-        <ImageBackground source={require('../assets/images/onboarding-bg.png')} style={styles.background}>
+        <ImageBackground source={require('../../assets/images/onboarding-bg.png')} style={styles.background}>
             <View style={styles.container}>
                 <StatusBar barStyle={'light-content'} />
                 <View style={StyleSheet.absoluteFill}>

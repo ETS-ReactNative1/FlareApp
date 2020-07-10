@@ -1,15 +1,79 @@
 import React from 'react';
-import { StyleSheet, View, Text, ImageBackground, TextInput, StatusBar, KeyboardAvoidingView, Keyboard, TouchableWithoutFeedback, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, ImageBackground, TextInput, StatusBar, Keyboard, TouchableWithoutFeedback, TouchableOpacity, Modal } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import { Auth } from 'aws-amplify';
 
 export default function ForgotPasswordResetScreen(props) {
     const { navigation } = props;
     const [password, setPassword] = React.useState('');
     const [confirmed_password, confirmPassword] = React.useState('');
+    let secondInput = {};
+    const username = props.route.params.username;
+    const code = props.route.params.code;
+    const [error, setError] = React.useState('');
+    const [modalVisible, setModalVisible] = React.useState(false);
+    const [success, setSuccess] = React.useState('');
+    const [successModalVisible, setSuccessModalVisible] = React.useState(false);
+
+    const handleSubmit = async () => {
+        if (password != confirmed_password) {
+            setError('PASSWORDS DO NOT MATCH.');
+            setModalVisible(!modalVisible);
+            RenderError();
+        }
+        else if (password.length < 6) {
+            setError('PASSWORD MUST BE\nAT LEAST 6 CHARACTERS.');
+            setModalVisible(!modalVisible);
+            RenderError();
+        }
+        else {
+            try {
+                await Auth.forgotPasswordSubmit(username, code, password);
+
+                console.log('User password changed successfully.');
+                setSuccess('PASSWORD\nSUCCESSFULLY CHANGED!');
+                setSuccessModalVisible(!successModalVisible);
+                RenderSuccess();
+
+                setTimeout(async () => {
+                    await navigation.navigate('LoginScreen');
+                }, 3000);
+            } catch (error) {
+                setError('FATAL ERROR.\nPLEASE TRY AGAIN LATER.');
+                setModalVisible(!modalVisible);
+                RenderError();
+                console.log('Error:', error);
+            }
+        }
+    };
+
+    function RenderSuccess() {
+        return ( 
+            <Modal animationType='slide' transparent={true} presentationStyle='overFullScreen' visible={successModalVisible}>
+                <TouchableOpacity style={styles.container} onPress={() => {setSuccessModalVisible(!successModalVisible)}}>
+                    <TouchableOpacity style={styles.successRectangle} onPress={() => {setSuccessModalVisible(!successModalVisible)}}>
+                        <Text style={styles.successText}>{success}</Text>
+                    </TouchableOpacity>
+                </TouchableOpacity>
+            </Modal>
+        );
+    }
+
+    function RenderError() {
+        return ( 
+            <Modal animationType='slide' transparent={true} presentationStyle='overFullScreen' visible={modalVisible}>
+                <TouchableOpacity style={styles.container} onPress={() => {setModalVisible(!modalVisible)}}>
+                    <TouchableOpacity style={styles.errorRectangle} onPress={() => {setModalVisible(!modalVisible)}}>
+                        <Text style={styles.errorText}>{error}</Text>
+                    </TouchableOpacity>
+                </TouchableOpacity>
+            </Modal>
+        );
+    }
 
     return (
-        <ImageBackground source={require('../assets/images/onboarding-bg.png')} style={styles.background}>
+        <ImageBackground source={require('../../assets/images/onboarding-bg.png')} style={styles.background}>
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <View style={styles.container}>
                     <StatusBar barStyle={'light-content'} />
@@ -37,7 +101,7 @@ export default function ForgotPasswordResetScreen(props) {
                             style={styles.passwordInputContainer}
                             placeholder='New password' 
                             placeholderTextColor='#707070'
-                            onChange={text => setPassword(text)}
+                            onChangeText={text => setPassword(text)}
                             value={password}
                             autoCapitalize='none'
                             autoCorrect={false}
@@ -50,6 +114,8 @@ export default function ForgotPasswordResetScreen(props) {
                             secureTextEntry={true}
                             clearButtonMode='while-editing'
                             clearTextOnFocus={true}
+                            onSubmitEditing={() => { secondInput.focus(); }}
+                            blurOnSubmit={false}
                         />
                         <View style={styles.passwordUnderline} />
 
@@ -58,16 +124,17 @@ export default function ForgotPasswordResetScreen(props) {
                         </View>
                         <TextInput
                             style={styles.confirmPasswordInputContainer}
+                            ref={ref => { secondInput = ref; }}
                             placeholder='Confirm password' 
                             placeholderTextColor='#707070' 
-                            onChange={text => confirmPassword(text)}
+                            onChangeText={text => confirmPassword(text)}
                             value={confirmed_password}
                             autoCapitalize='none'
                             autoCorrect={false}
                             enablesReturnKeyAutomatically={true}
                             keyboardAppearance='dark'
                             keyboardType='ascii-capable'
-                            returnKeyType='go'
+                            returnKeyType='done'
                             textContentType='password'
                             selectionColor='#ef473a'
                             secureTextEntry={true}
@@ -77,11 +144,15 @@ export default function ForgotPasswordResetScreen(props) {
                         <View style={styles.confirmPasswordUnderline} />
                     </View>
 
+                    <RenderError />
+
+                    <RenderSuccess />
+
                     <TouchableOpacity style={styles.backRectangle} onPress={() => navigation.navigate('ForgotPasswordTFAScreen')}>
                         <Text style={styles.backText}>BACK</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.resetRectangle} onPress={() => navigation.navigate('LoginScreen')}>
+                    <TouchableOpacity style={styles.resetRectangle} onPress={handleSubmit}>
                         <Text style={styles.resetButtonText}>RESET</Text>
                     </TouchableOpacity>
                 </View>
@@ -226,5 +297,47 @@ const styles = StyleSheet.create({
 		fontSize: 17,
 		fontWeight: '700',
 		letterSpacing: 1.2,
+    },
+
+    errorRectangle: {
+        position: 'absolute',
+        bottom: 160,
+        alignSelf: 'center',
+        width: 335,
+        height: 100,
+        borderRadius: 50,
+        backgroundColor: '#ef473a',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+
+    errorText: {
+        color: '#30122D',
+        fontFamily: 'Poppins-Bold',
+        fontSize: 17,
+        fontWeight: '700',
+        letterSpacing: 1.2,
+        textAlign: 'center'
+    },
+
+    successRectangle: {
+        position: 'absolute',
+        bottom: 160,
+        alignSelf: 'center',
+        width: 335,
+        height: 100,
+        borderRadius: 50,
+        backgroundColor: '#7FD8BE',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+
+    successText: {
+        color: '#30122D',
+        fontFamily: 'Poppins-Bold',
+        fontSize: 17,
+        fontWeight: '700',
+        letterSpacing: 1.2,
+        textAlign: 'center'
     },
 });

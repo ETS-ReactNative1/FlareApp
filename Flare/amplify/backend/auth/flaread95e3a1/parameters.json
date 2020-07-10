@@ -1,8 +1,8 @@
 {
-    "identityPoolName": "flare9217d9a3_identitypool_9217d9a3",
+    "identityPoolName": "flaread95e3a1_identitypool_ad95e3a1",
     "allowUnauthenticatedIdentities": false,
-    "resourceNameTruncated": "flare9217d9a3",
-    "userPoolName": "flare9217d9a3_userpool_9217d9a3",
+    "resourceNameTruncated": "flaread95e3a1",
+    "userPoolName": "flaread95e3a1_userpool_ad95e3a1",
     "autoVerifiedAttributes": [
         "email"
     ],
@@ -17,10 +17,7 @@
     "defaultPasswordPolicy": false,
     "passwordPolicyMinLength": 8,
     "passwordPolicyCharacters": [],
-    "requiredAttributes": [
-        "phone_number",
-        "preferred_username"
-    ],
+    "requiredAttributes": [],
     "userpoolClientGenerateSecret": true,
     "userpoolClientRefreshTokenValidity": 30,
     "userpoolClientWriteAttributes": [
@@ -29,10 +26,10 @@
     "userpoolClientReadAttributes": [
         "email"
     ],
-    "userpoolClientLambdaRole": "flare99217d9a3_userpoolclient_lambda_role",
+    "userpoolClientLambdaRole": "flareaad95e3a1_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,
-    "sharedId": "9217d9a3",
-    "resourceName": "flare9217d9a3",
+    "sharedId": "ad95e3a1",
+    "resourceName": "flaread95e3a1",
     "authSelections": "identityPoolAndUserPool",
     "authRoleArn": {
         "Fn::GetAtt": [

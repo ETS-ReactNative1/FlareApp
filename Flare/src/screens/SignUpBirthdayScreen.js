@@ -7,7 +7,7 @@ import DatePicker from '@react-native-community/datetimepicker';
 export default function SignUpBirthdayScreen(props) {
     const { navigation } = props;
     const current_date = new Date();
-    const sixteen_yo = new Date('17');
+    const sixteen_yo = new Date('17'); // actual value from the API is 16
     let { birthday, years_old, months_old, days_old } = 0;
     const [modalVisible, setModalVisible] = React.useState(false);
 
@@ -18,7 +18,7 @@ export default function SignUpBirthdayScreen(props) {
         days_old = date.getDate();
     };
 
-    const handlePress = () => {
+    const handleSubmit = () => {
         if (years_old < sixteen_yo.getFullYear() || birthday == undefined) {
             setModalVisible(!modalVisible);
             RenderError();
@@ -54,7 +54,7 @@ export default function SignUpBirthdayScreen(props) {
     }
 
     return (
-        <ImageBackground source={require('../assets/images/onboarding-bg.png')} style={styles.background}>
+        <ImageBackground source={require('../../assets/images/onboarding-bg.png')} style={styles.background}>
             <View style={styles.container}>
                 <StatusBar barStyle={'light-content'} />
                 <View style={StyleSheet.absoluteFill}>
@@ -92,7 +92,7 @@ export default function SignUpBirthdayScreen(props) {
                     <Text style={styles.cancelText}>CANCEL</Text>
                 </TouchableOpacity> 
 
-                <TouchableOpacity style={styles.continueButton} onPress={handlePress}>
+                <TouchableOpacity style={styles.continueButton} onPress={handleSubmit}>
                     <FontAwesome5 name={'arrow-circle-right'} size={60} color='#ef473a' solid />
                 </TouchableOpacity>
             </View>

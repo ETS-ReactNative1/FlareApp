@@ -1,16 +1,38 @@
 import React from 'react';
 import { StyleSheet, View, Text, ImageBackground, TextInput, StatusBar, Keyboard, TouchableWithoutFeedback, TouchableOpacity, Modal } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
+import Icon from 'react-native-vector-icons/FontAwesome'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
-export default function SignUpTFAScreen(props) {
+export default function SignUpPhoneScreen(props) {
     const { navigation } = props;
-    const [code, setTFACode] = React.useState('');
+    const [phone_number, setPhoneNumber] = React.useState('');
     const [modalVisible, setModalVisible] = React.useState(false);
 
+    const handleSubmit = () => {
+        if (phone_number.length < 10) {
+            setModalVisible(!modalVisible);
+            RenderError();
+        }
+        else {
+            navigation.navigate('SignUpUsernameScreen', { phone_number: phone_number });
+        }
+    };
+
+    function RenderError() {
+        return ( 
+            <Modal animationType='slide' transparent={true} presentationStyle='overFullScreen' visible={modalVisible}>
+                <TouchableOpacity style={styles.container} onPress={() => {setModalVisible(!modalVisible)}}>
+                    <TouchableOpacity style={styles.errorRectangle} onPress={() => {setModalVisible(!modalVisible)}}>
+                        <Text style={styles.errorText}>PLEASE ENTER A VALID{'\n'}PHONE NUMBER.</Text>
+                    </TouchableOpacity>
+                </TouchableOpacity>
+            </Modal>
+        );
+    }
+
     return (
-        <ImageBackground source={require('../assets/images/onboarding-bg.png')} style={styles.background}>
+        <ImageBackground source={require('../../assets/images/onboarding-bg.png')} style={styles.background}>
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <View style={styles.container}>
                     <StatusBar barStyle={'light-content'} />
@@ -28,19 +50,19 @@ export default function SignUpTFAScreen(props) {
                         </Svg>
                     </View>
 
-                    <Text style={styles.messagesText}>CHECK{'\n'}YOUR MESSAGES.</Text>
-                    <Text style={styles.codeText}>WE SENT YOU A 4 DIGIT CODE.{'\n'}ENTER IT HERE.</Text>
+                    <Text style={styles.phoneNumberText}>WHAT'S{'\n'}YOUR PHONE NUMBER?</Text>
+                    <Text style={styles.smsText}>YOU WILL RECEIVE AN SMS TO CONFIRM YOUR PHONE NUMBER. FEES MAY APPLY.</Text>
 
                     <View style={styles.rectangle}>
-                        <View style={styles.tfaIcon}>
-                            <Icon name={'shield-lock'} size={20} color='#707070' />
+                        <View style={styles.phoneIcon}>
+                            <Icon name={'phone'} size={20} color='#707070' />
                         </View>
                         <TextInput
-                            style={styles.tfaInputContainer}
-                            placeholder='4 digit code' 
+                            style={styles.phoneInputContainer}
+                            placeholder='Phone number' 
                             placeholderTextColor='#707070'
-                            onChangeText={text => setTFACode(text)}
-                            value={code}
+                            onChangeText={text => setPhoneNumber(text)}
+                            value={phone_number}
                             autoCapitalize='none'
                             autoCorrect={false}
                             enablesReturnKeyAutomatically={true}
@@ -50,33 +72,18 @@ export default function SignUpTFAScreen(props) {
                             textContentType='telephoneNumber'
                             selectionColor='#ef473a'
                             clearButtonMode='while-editing'
-                            maxLength={4}
+                            maxLength={10}
                         />
                         <View style={styles.underline} />
                     </View>
 
-                    <TouchableOpacity style={styles.resendRectangle} onPress={() => {setModalVisible(!modalVisible)}}>
-                        <Text style={styles.resendText}>RESEND</Text>
-                    </TouchableOpacity>
+                    <RenderError />
 
-                    <Modal 
-                        animationType='slide'
-                        transparent={true}
-                        presentationStyle='overFullScreen'
-                        visible={modalVisible}
-                        >
-                        <TouchableOpacity style={styles.container} onPress={() => {setModalVisible(!modalVisible)}}>
-                            <TouchableOpacity style={styles.smsRectangle} onPress={() => {setModalVisible(!modalVisible)}}>
-                                <Text style={styles.smsText}>SMS SENT!</Text>
-                            </TouchableOpacity>
-                        </TouchableOpacity>
-                    </Modal>
-
-                    <TouchableOpacity style={styles.backRectangle} onPress={() => navigation.navigate('SignUpPhoneScreen')}>
+                    <TouchableOpacity style={styles.backRectangle} onPress={() => navigation.navigate('SignUpBirthdayScreen')}>
                         <Text style={styles.backText}>BACK</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.continueButton} onPress={() => navigation.navigate('SignUpUsernameScreen')}>
+                    <TouchableOpacity style={styles.continueButton} onPress={handleSubmit}>
                         <FontAwesome5 name={'arrow-circle-right'} size={60} color='#ef473a' solid />
                     </TouchableOpacity>
                 </View>
@@ -90,12 +97,12 @@ const styles = StyleSheet.create({
         width: '100%',
         height: '100%'
     },
-
+    
     container: {
 		flex: 1,
     },
 
-    messagesText: {
+    phoneNumberText: {
         position: 'absolute',
         top: 40,
         left: 20,
@@ -107,7 +114,7 @@ const styles = StyleSheet.create({
         lineHeight: 60,
     },
 
-    codeText: {
+    smsText: {
         position: 'absolute',
         top: 230,
         left: 20,
@@ -130,7 +137,7 @@ const styles = StyleSheet.create({
         opacity: 0.9,
     },
 
-    tfaIcon: {
+    phoneIcon: {
         position: 'absolute',
         top: 20,
         left: 17,
@@ -138,7 +145,7 @@ const styles = StyleSheet.create({
         height: 22,
     },
 
-    tfaInputContainer: {
+    phoneInputContainer: {
         position: 'absolute',
         top: 15,
         left: 40,
@@ -159,52 +166,6 @@ const styles = StyleSheet.create({
         borderStyle: 'solid',
         borderWidth: 1,
         opacity: 0.5
-    },
-
-    resendRectangle: {
-        position: 'absolute',
-        top: 435,
-        right: 20,
-        width: 125,
-        height: 50,
-        borderColor: '#ef473a',
-        borderStyle: 'solid',
-        borderWidth: 4,
-        borderRadius: 25,
-        backgroundColor: '#ef473a',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-
-    resendText: {
-		color: '#ffffff',
-		fontFamily: 'Poppins-Bold',
-		fontSize: 17,
-		fontWeight: '700',
-		letterSpacing: 1.2,
-    },
-
-    smsRectangle: {
-        position: 'absolute',
-        bottom: 160,
-        alignSelf: 'center',
-        width: 180,
-        height: 50,
-        borderColor: '#7FD8BE',
-        borderStyle: 'solid',
-        borderWidth: 4,
-        borderRadius: 25,
-        backgroundColor: '#7FD8BE',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-
-    smsText: {
-        color: '#30122D',
-        fontFamily: 'Poppins-Bold',
-        fontSize: 17,
-        fontWeight: '700',
-        letterSpacing: 1.2,
     },
 
     backRectangle: {
@@ -234,5 +195,26 @@ const styles = StyleSheet.create({
         position: 'absolute',
         bottom: 29,
         right: 40,
+    },
+
+    errorRectangle: {
+        position: 'absolute',
+        bottom: 160,
+        alignSelf: 'center',
+        width: 335,
+        height: 100,
+        borderRadius: 50,
+        backgroundColor: '#ef473a',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+
+    errorText: {
+        color: '#30122D',
+        fontFamily: 'Poppins-Bold',
+        fontSize: 17,
+        fontWeight: '700',
+        letterSpacing: 1.2,
+        textAlign: 'center'
     },
 });

@@ -7,10 +7,35 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 export default function ForgotPasswordTFAScreen(props) {
     const { navigation } = props;
     const [code, setTFACode] = React.useState('');
+    const [error, setError] = React.useState('');
     const [modalVisible, setModalVisible] = React.useState(false);
+    const username = props.route.params.username;
+
+    const handleSubmit = () => {
+        if (code.length < 6) {
+            setError('PLEASE ENTER A VALID CODE.');
+            setModalVisible(!modalVisible);
+            RenderError();
+        }
+        else {
+            navigation.navigate('ForgotPasswordResetScreen', {username: username, code: code});
+        }
+    };
+
+    function RenderError() {
+        return ( 
+            <Modal animationType='slide' transparent={true} presentationStyle='overFullScreen' visible={modalVisible}>
+                <TouchableOpacity style={styles.container} onPress={() => {setModalVisible(!modalVisible)}}>
+                    <TouchableOpacity style={styles.errorRectangle} onPress={() => {setModalVisible(!modalVisible)}}>
+                        <Text style={styles.errorText}>{error}</Text>
+                    </TouchableOpacity>
+                </TouchableOpacity>
+            </Modal>
+        );
+    }
 
     return(
-        <ImageBackground source={require('../assets/images/onboarding-bg.png')} style={styles.background}>
+        <ImageBackground source={require('../../assets/images/onboarding-bg.png')} style={styles.background}>
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <View style={styles.container}>
                     <StatusBar barStyle={'light-content'} />
@@ -29,7 +54,7 @@ export default function ForgotPasswordTFAScreen(props) {
                     </View>
 
                     <Text style={styles.messagesText}>CHECK{'\n'}YOUR MESSAGES.</Text>
-                    <Text style={styles.codeText}>WE SENT YOU A 4 DIGIT CODE.{'\n'}ENTER IT HERE.</Text>
+                    <Text style={styles.codeText}>WE SENT YOU A 6 DIGIT CODE.{'\n'}ENTER IT HERE.</Text>
 
                     <View style={styles.rectangle}>
                         <View style={styles.tfaIcon}>
@@ -37,7 +62,7 @@ export default function ForgotPasswordTFAScreen(props) {
                         </View>
                         <TextInput
                             style={styles.tfaInputContainer}
-                            placeholder='4 digit code' 
+                            placeholder='6 digit code' 
                             placeholderTextColor='#707070'
                             onChangeText={text => setTFACode(text)}
                             value={code}
@@ -47,36 +72,21 @@ export default function ForgotPasswordTFAScreen(props) {
                             keyboardAppearance='dark'
                             keyboardType='number-pad'
                             returnKeyType='done'
-                            textContentType='telephoneNumber'
+                            textContentType='oneTimeCode'
                             selectionColor='#ef473a'
                             clearButtonMode='while-editing'
-                            maxLength={4}
+                            maxLength={6}
                         />
                         <View style={styles.underline} />
                     </View>
 
-                    <TouchableOpacity style={styles.resendRectangle} onPress={() => {setModalVisible(!modalVisible)}}>
-                        <Text style={styles.resendText}>RESEND</Text>
-                    </TouchableOpacity>
+                    <RenderError />
 
-                    <Modal 
-                        animationType='slide'
-                        transparent={true}
-                        presentationStyle='overFullScreen'
-                        visible={modalVisible}
-                        >
-                        <TouchableOpacity style={styles.container} onPress={() => {setModalVisible(!modalVisible)}}>
-                            <TouchableOpacity style={styles.smsRectangle} onPress={() => {setModalVisible(!modalVisible)}}>
-                                <Text style={styles.smsText}>SMS SENT!</Text>
-                            </TouchableOpacity>
-                        </TouchableOpacity>
-                    </Modal>
-
-                    <TouchableOpacity style={styles.backRectangle} onPress={() => navigation.navigate('ForgotPasswordPhoneScreen')}>
+                    <TouchableOpacity style={styles.backRectangle} onPress={() => navigation.navigate('ForgotPasswordUsernameScreen')}>
                         <Text style={styles.backText}>BACK</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.continueButton} onPress={() => navigation.navigate('ForgotPasswordResetScreen')}>
+                    <TouchableOpacity style={styles.continueButton} onPress={handleSubmit}>
                         <FontAwesome5 name={'arrow-circle-right'} size={60} color='#ef473a' solid />
                     </TouchableOpacity>
                 </View>
@@ -161,52 +171,6 @@ const styles = StyleSheet.create({
         opacity: 0.5
     },
 
-    resendRectangle: {
-        position: 'absolute',
-        top: 435,
-        right: 20,
-        width: 125,
-        height: 50,
-        borderColor: '#ef473a',
-        borderStyle: 'solid',
-        borderWidth: 4,
-        borderRadius: 25,
-        backgroundColor: '#ef473a',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-
-    resendText: {
-		color: '#ffffff',
-		fontFamily: 'Poppins-Bold',
-		fontSize: 17,
-		fontWeight: '700',
-		letterSpacing: 1.2,
-    },
-
-    smsRectangle: {
-        position: 'absolute',
-        bottom: 160,
-        alignSelf: 'center',
-        width: 180,
-        height: 50,
-        borderColor: '#7FD8BE',
-        borderStyle: 'solid',
-        borderWidth: 4,
-        borderRadius: 25,
-        backgroundColor: '#7FD8BE',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-
-    smsText: {
-        color: '#30122D',
-        fontFamily: 'Poppins-Bold',
-        fontSize: 17,
-        fontWeight: '700',
-        letterSpacing: 1.2,
-    },
-
     backRectangle: {
         position: 'absolute',
         bottom: 40,
@@ -234,5 +198,26 @@ const styles = StyleSheet.create({
         position: 'absolute',
         bottom: 29,
         right: 40,
+    },
+
+    errorRectangle: {
+        position: 'absolute',
+        bottom: 160,
+        alignSelf: 'center',
+        width: 335,
+        height: 100,
+        borderRadius: 50,
+        backgroundColor: '#ef473a',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+
+    errorText: {
+        color: '#30122D',
+        fontFamily: 'Poppins-Bold',
+        fontSize: 17,
+        fontWeight: '700',
+        letterSpacing: 1.2,
+        textAlign: 'center'
     },
 });

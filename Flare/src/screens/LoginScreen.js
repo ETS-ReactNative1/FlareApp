@@ -1,15 +1,82 @@
 import React from 'react';
-import { StyleSheet, View, Text, ImageBackground, TextInput, StatusBar, Keyboard, TouchableWithoutFeedback, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, ImageBackground, TextInput, StatusBar, Keyboard, TouchableWithoutFeedback, TouchableOpacity, Modal } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import { Auth } from 'aws-amplify';
+import AsyncStorage from '@react-native-community/async-storage';
 
 export default function LoginScreen(props) {
 	const { navigation } = props;
 	const [username, setUsername] = React.useState('');
-	const [password, setPassword] = React.useState('');
+    const [password, setPassword] = React.useState('');
+    let secondInput = {};
+    const [error, setError] = React.useState('');
+    const [modalVisible, setModalVisible] = React.useState(false);
+    
+    const handleSubmit = async () => {
+        if (username.length < 1) {
+            setError('PLEASE ENTER YOUR USERNAME.');
+            setModalVisible(!modalVisible);
+            RenderError();
+        }
+        else if (password.length < 6) {
+            setError('PLEASE ENTER YOUR PASSWORD.');
+            setModalVisible(!modalVisible);
+            RenderError();
+        }
+        else {
+            try {
+                const credentials = { username: username, password: password };
+                await Auth.signIn(username, password);
+                await AsyncStorage.setItem('userToken', JSON.stringify(credentials));
+    
+                console.log('User successfully logged in.');
+                navigation.navigate('RecentPostScreen');
+            } catch (error) {
+                if (error.code === 'UserNotConfirmedException') {
+                    setError('ACCOUNT NOT VERIFIED YET.');
+                    setModalVisible(!modalVisible);
+                    RenderError();
+                } 
+                else if (error.code === 'PasswordResetRequiredException') {
+                    setError('EXISTING USER FOUND.\nPLEASE RESET YOUR PASSWORD.');
+                    setModalVisible(!modalVisible);
+                    RenderError();
+                } 
+                else if (error.code === 'NotAuthorizedException') {
+                    setError('FORGOT YOUR PASSWORD?');
+                    setModalVisible(!modalVisible);
+                    RenderError();
+                } 
+                else if (error.code === 'UserNotFoundException') {
+                    setError('USER DOES NOT EXIST.');
+                    setModalVisible(!modalVisible);
+                    RenderError();
+                } 
+                else {
+                    setError('FATAL ERROR\nPLEASE TRY AGAIN LATER.');
+                    setModalVisible(!modalVisible);
+                    RenderError();
+                    console.log('Error:', error);
+                }
+            }
+        }
+    }
+
+    function RenderError() {
+        return ( 
+            <Modal animationType='slide' transparent={true} presentationStyle='overFullScreen' visible={modalVisible}>
+                <TouchableOpacity style={styles.container} onPress={() => {setModalVisible(!modalVisible)}}>
+                    <TouchableOpacity style={styles.errorRectangle} onPress={() => {setModalVisible(!modalVisible)}}>
+                        <Text style={styles.errorText}>{error}</Text>
+                    </TouchableOpacity>
+                </TouchableOpacity>
+            </Modal>
+        );
+    }
 
   return (
-    <ImageBackground source={require('../assets/images/onboarding-bg.png')} style={styles.background}>
+    <ImageBackground source={require('../../assets/images/onboarding-bg.png')} style={styles.background}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={styles.container}>
                 <StatusBar barStyle={'light-content'} />
@@ -49,6 +116,9 @@ export default function LoginScreen(props) {
                         textContentType='username'
                         selectionColor='#ef473a'
                         clearButtonMode='while-editing'
+                        maxLength={28}
+                        onSubmitEditing={() => { secondInput.focus(); }}
+                        blurOnSubmit={false}
                     />
                     <View style={styles.usernameUnderline} />
 
@@ -57,16 +127,17 @@ export default function LoginScreen(props) {
                     </View>
                     <TextInput
                         style={styles.passwordInputContainer}
+                        ref={ref => { secondInput = ref; }}
                         placeholder='Password' 
                         placeholderTextColor='#707070' 
-                        onChange={text => setPassword(text)}
+                        onChangeText={text => setPassword(text)}
                         value={password}
                         autoCapitalize='none'
                         autoCorrect={false}
                         enablesReturnKeyAutomatically={true}
                         keyboardAppearance='dark'
                         keyboardType='ascii-capable'
-                        returnKeyType='go'
+                        returnKeyType='done'
                         textContentType='password'
                         selectionColor='#ef473a'
                         secureTextEntry={true}
@@ -75,13 +146,15 @@ export default function LoginScreen(props) {
                     />
                     <View style={styles.passwordUnderline} />
                 </View>
-                <Text style={styles.forgotYourText} onPress={() => navigation.navigate('ForgotPasswordPhoneScreen')}>FORGOT YOUR PASSWORD?</Text>
+                <Text style={styles.forgotYourText} onPress={() => navigation.navigate('ForgotPasswordUsernameScreen')}>FORGOT YOUR PASSWORD?</Text>
+
+                <RenderError />
 
                 <TouchableOpacity style={styles.cancelRectangle} onPress={() => navigation.navigate('WelcomeScreen')}>
                     <Text style={styles.cancelText}>CANCEL</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={styles.loginRectangle} onPress={() => navigation.navigate('RecentPostsScreen')}>
+                <TouchableOpacity style={styles.loginRectangle} onPress={handleSubmit}>
                     <Text style={styles.loginText}>LOGIN</Text>
                 </TouchableOpacity>
             </View>
@@ -252,5 +325,26 @@ const styles = StyleSheet.create({
 		fontSize: 17,
 		fontWeight: '700',
 		letterSpacing: 1.2,
-	},
+    },
+    
+    errorRectangle: {
+        position: 'absolute',
+        bottom: 160,
+        alignSelf: 'center',
+        width: 335,
+        height: 100,
+        borderRadius: 50,
+        backgroundColor: '#ef473a',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+
+    errorText: {
+        color: '#30122D',
+        fontFamily: 'Poppins-Bold',
+        fontSize: 17,
+        fontWeight: '700',
+        letterSpacing: 1.2,
+        textAlign: 'center'
+    },
 });

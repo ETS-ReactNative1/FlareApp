@@ -1,0 +1,64 @@
+{
+    "providers": {
+        "awscloudformation": {
+            "AuthRoleName": "amplify-flare-dev-150944-authRole",
+            "UnauthRoleArn": "arn:aws:iam::533348061530:role/amplify-flare-dev-150944-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::533348061530:role/amplify-flare-dev-150944-authRole",
+            "Region": "us-east-2",
+            "DeploymentBucketName": "amplify-flare-dev-150944-deployment",
+            "UnauthRoleName": "amplify-flare-dev-150944-unauthRole",
+            "StackName": "amplify-flare-dev-150944",
+            "StackId": "arn:aws:cloudformation:us-east-2:533348061530:stack/amplify-flare-dev-150944/99a44b60-b7e0-11ea-92b7-0a7adbd72fc8",
+            "AmplifyAppId": "dl451lzad42du"
+        }
+    },
+    "api": {
+        "FlareAPI": {
+            "service": "AppSync",
+            "providerPlugin": "awscloudformation",
+            "output": {
+                "authConfig": {
+                    "additionalAuthenticationProviders": [],
+                    "defaultAuthentication": {
+                        "authenticationType": "API_KEY",
+                        "apiKeyConfig": {
+                            "description": "dev",
+                            "apiKeyExpirationDays": 7
+                        }
+                    }
+                },
+                "GraphQLAPIIdOutput": "py353zccojhy7bqubhamidnhhe",
+                "GraphQLAPIEndpointOutput": "https://elogv5kiuvd5tmfaf4idgt2qma.appsync-api.us-east-2.amazonaws.com/graphql",
+                "GraphQLAPIKeyOutput": "da2-hurqazqkujg7rbad7bmwxbuzba"
+            },
+            "providerMetadata": {
+                "s3TemplateURL": "https://s3.amazonaws.com/amplify-flare-dev-150944-deployment/amplify-cfn-templates/api/cloudformation-template.json",
+                "logicalId": "apiFlareAPI"
+            },
+            "lastPushTimeStamp": "2020-07-04T16:01:17.512Z",
+            "lastPushDirHash": "4h22XbcOsWE5EntRsNnmJmtFFJA="
+        }
+    },
+    "auth": {
+        "flaread95e3a1": {
+            "service": "Cognito",
+            "providerPlugin": "awscloudformation",
+            "dependsOn": [],
+            "providerMetadata": {
+                "s3TemplateURL": "https://s3.amazonaws.com/amplify-flare-dev-150944-deployment/amplify-cfn-templates/auth/flaread95e3a1-cloudformation-template.yml",
+                "logicalId": "authflaread95e3a1"
+            },
+            "lastPushTimeStamp": "2020-07-04T16:01:17.514Z",
+            "output": {
+                "AppClientSecret": "thk837skkk548srac7tqk0lv32ptcs4qmgg1sruvk7r07hqojin",
+                "UserPoolId": "us-east-2_3Ll3L1L1E",
+                "AppClientIDWeb": "2nvogs9qnkt71aep51ic2lcep4",
+                "AppClientID": "1cmpve2ueaa92l51i905v7a4hj",
+                "IdentityPoolId": "us-east-2:e11ac490-4b5e-42c1-9544-42414e393850",
+                "IdentityPoolName": "flaread95e3a1_identitypool_ad95e3a1__dev",
+                "UserPoolName": "flaread95e3a1_userpool_ad95e3a1"
+            },
+            "lastPushDirHash": "Tpjlso8qbnWGabrx0KyIdbD+CR0="
+        }
+    }
+}
